@@ -12,7 +12,6 @@ import {
    RangeAndIndex,
    outputChannel
 } from './utils'
-import { handleImportantChanges, showImportantChanges } from './importantChanges'
 import { getUpdatedRanges } from './positionTracking'
 // #endregion
 
@@ -27,7 +26,6 @@ const activate = (context: vscode.ExtensionContext) => {
    vscode.commands.executeCommand('setContext', 'inactiveSelections', false)
    // #endregion
 
-   handleImportantChanges(context)
 
    vscode.workspace.onDidChangeConfiguration(
       (event) => {
@@ -500,13 +498,6 @@ const activate = (context: vscode.ExtensionContext) => {
       }
    )
 
-   const showImportantChangesDisposable = vscode.commands.registerCommand(
-      'kcs.showImportantChanges',
-      () => {
-         showImportantChanges(context)
-      }
-   )
-
    const undo = vscode.commands.registerCommand('kcs.undo', () => {
       const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
       const activeEditorData = mainData[activeDocUri]
@@ -619,7 +610,6 @@ const activate = (context: vscode.ExtensionContext) => {
       placeInactiveSelection,
       activateSelections,
       removeInactiveSelections,
-      showImportantChangesDisposable,
       undo,
       redo,
       ...disposables
