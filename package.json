@@ -60,7 +60,12 @@
          {
             "command": "kcs.activateSelections",
             "key": "pageup",
-            "when": "editorTextFocus"
+            "when": "editorTextFocus && inactiveSelections"
+         },
+         {
+            "command": "kcs.deactivateSelections",
+            "key": "pageup",
+            "when": "editorTextFocus && !inactiveSelections"
          },
          {
             "command": "kcs.removeInactiveSelections",
