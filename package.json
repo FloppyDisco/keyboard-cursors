@@ -35,6 +35,10 @@
             "title": "Keyboard Cursor: Activate Selections"
          },
          {
+            "command": "keyboardCursor.deactivateSelections",
+            "title": "Keyboard Cursor: Deactivate Selections"
+         },
+         {
             "command": "keyboardCursor.removeInactiveSelections",
             "title": "Keyboard Cursor: Remove Inactive Selections"
          },
