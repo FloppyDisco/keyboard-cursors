@@ -39,7 +39,7 @@
             "title": "KCS: Deactivate Selections"
          },
          {
-            "command": "keyboardCursor.removeInactiveSelections",
+            "command": "kcs.removeInactiveSelections",
             "title": "KCS: Remove Inactive Selections"
          },
          {

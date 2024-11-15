@@ -466,8 +466,8 @@ const activate = (context: vscode.ExtensionContext) => {
       activeEditorData.inactiveSelections = []
    })
 
-   const deactivateSelections = vscode.commands.registerCommand('keyboardCursor.deactivateSelections', () => {
-      vscode.commands.executeCommand('keyboardCursor.placeInactiveSelection');
+   const deactivateSelections = vscode.commands.registerCommand('kcs.deactivateSelections', () => {
+      vscode.commands.executeCommand('kcs.placeInactiveSelection');
       vscode.commands.executeCommand('removeSecondaryCursors');
    })
 
