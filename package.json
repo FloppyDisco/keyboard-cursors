@@ -1,5 +1,5 @@
 {
-   "name": "kcs",
+   "name": "keyboardCursor",
    "displayName": "Keyboard Cursors and Selections",
    "description": "Create arbitrary cursors and selections with the keyboard.",
    "version": "1.4.4",
@@ -27,71 +27,54 @@
    "contributes": {
       "commands": [
          {
-            "command": "kcs.placeInactiveSelection",
+            "command": "keyboardCursor.placeInactiveSelection",
             "title": "KCS: Place Inactive Selection"
          },
          {
-            "command": "kcs.activateSelections",
+            "command": "keyboardCursor.activateSelections",
             "title": "KCS: Activate Selections"
          },
          {
-            "command": "kcs.removeInactiveSelections",
+            "command": "keyboardCursor.removeInactiveSelections",
             "title": "KCS: Remove Inactive Selections"
-         },
-         {
-            "command": "kcs.undo",
-            "title": "KCS: Undo"
-         },
-         {
-            "command": "kcs.redo",
-            "title": "KCS: Redo"
          }
       ],
       "keybindings": [
          {
-            "command": "kcs.placeInactiveSelection",
-            "key": "pagedown",
+            "command": "keyboardCursor.placeInactiveSelection",
+            "key": "alt+enter",
             "when": "editorTextFocus"
          },
          {
-            "command": "kcs.activateSelections",
-            "key": "pageup",
+            "command": "keyboardCursor.activateSelections",
+            "key": "win+enter",
+            "mac": "ctrl+enter",
             "when": "editorTextFocus"
          },
          {
-            "command": "kcs.removeInactiveSelections",
+            "command": "keyboardCursor.removeInactiveSelections",
             "key": "escape",
             "when": "editorTextFocus && inactiveSelections && !editorHasSelection && !editorHasMultipleSelections && !findWidgetVisible && !suggestWidgetVisible && !renameInputVisible && !referenceSearchVisible && !codeActionMenuVisible && !parameterHintsVisible && !notificationCenterVisible && !notificationToastsVisible"
-         },
-         {
-            "command": "kcs.undo",
-            "key": "alt+shift+z",
-            "when": "editorTextFocus"
-         },
-         {
-            "command": "kcs.redo",
-            "key": "alt+shift+y",
-            "when": "editorTextFocus"
          }
       ],
       "configuration": {
-         "title": "KCS",
+         "title": "keyboardCursor",
          "properties": {
-            "kcs.cursorColor": {
+            "keyboardCursor.cursorColor": {
                "type": "string",
                "description": "Default: #ee77a3",
                "default": "#ee77a3",
                "scope": "window",
                "format": "color-hex"
             },
-            "kcs.selectionColor": {
+            "keyboardCursor.selectionColor": {
                "type": "string",
                "description": "Default: #8c1a8e99\nNote that the default color for selections has transparency.",
                "default": "#8c1a8e99",
                "scope": "window",
                "format": "color-hex"
             },
-            "kcs.inactiveSelectionsReactToDocumentEdits": {
+            "keyboardCursor.inactiveSelectionsReactToDocumentEdits": {
                "type": "boolean",
                "description": "Experimental: When you make edits to the document, the inacitve selections will move across the document in accordance with those edits.",
                "default": true,

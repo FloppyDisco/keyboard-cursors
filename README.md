@@ -100,13 +100,13 @@ For questions, suggestions, issues, feel free to use the [Issues](https://github
 
    2. Search for and select `Preferences: Open Settingts (UI)`.
 
-   3. Once the settings view is open, type "kcs" and options like `Kcs: Cursor Color` and `Kcs: Selection Color` will appear. Their value has to be given in hex code.
+   3. Once the settings view is open, type "keyboardCursor" and options like `Kcs: Cursor Color` and `Kcs: Selection Color` will appear. Their value has to be given in hex code.
 
    <br>
 
    -  For developers who want to change these colors through their theme, this is an example of how you could do it:
       ```javascript
-      const configuration = vscode.workspace.getConfiguration('kcs')
+      const configuration = vscode.workspace.getConfiguration('keyboardCursor')
       await configuration.update('cursorColor', '#ff0000', vscode.ConfigurationTarget.Global)
       await configuration.update('selectionColor', '#ff000099', vscode.ConfigurationTarget.Global)
       ```

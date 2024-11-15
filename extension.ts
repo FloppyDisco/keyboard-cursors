@@ -31,8 +31,8 @@ const activate = (context: vscode.ExtensionContext) => {
       (event) => {
          if (
             event.affectsConfiguration('editor.fontSize') ||
-            event.affectsConfiguration('kcs.cursorColor') ||
-            event.affectsConfiguration('kcs.selectionColor')
+            event.affectsConfiguration('keyboardCursor.cursorColor') ||
+            event.affectsConfiguration('keyboardCursor.selectionColor')
          ) {
             const previousUnsetMyDecorations = unsetMyDecorations
             const previousDisposeDecorations = disposeDecorations
@@ -68,7 +68,7 @@ const activate = (context: vscode.ExtensionContext) => {
          }
 
          const inactiveSelectionsReactToDocumentEdits = vscode.workspace
-            .getConfiguration('kcs')
+            .getConfiguration('keyboardCursor')
             .get('inactiveSelectionsReactToDocumentEdits')
 
          const eventDocUri = event.document.uri.toString()
@@ -337,7 +337,7 @@ const activate = (context: vscode.ExtensionContext) => {
    )
 
    const placeInactiveSelection = vscode.commands.registerCommand(
-      'kcs.placeInactiveSelection',
+      'keyboardCursor.placeInactiveSelection',
       () => {
          const activeEditor = vscode.window.activeTextEditor
          const activeDocUri = activeEditor.document.uri.toString()
@@ -431,7 +431,7 @@ const activate = (context: vscode.ExtensionContext) => {
       }
    )
 
-   const activateSelections = vscode.commands.registerCommand('kcs.activateSelections', () => {
+   const activateSelections = vscode.commands.registerCommand('keyboardCursor.activateSelections', () => {
       const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
       const activeEditorData = mainData[activeDocUri]
 
@@ -465,7 +465,7 @@ const activate = (context: vscode.ExtensionContext) => {
    })
 
    const removeInactiveSelections = vscode.commands.registerCommand(
-      'kcs.removeInactiveSelections',
+      'keyboardCursor.removeInactiveSelections',
       () => {
          const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
          const activeEditorData = mainData[activeDocUri]
@@ -498,7 +498,7 @@ const activate = (context: vscode.ExtensionContext) => {
       }
    )
 
-   const undo = vscode.commands.registerCommand('kcs.undo', () => {
+   const undo = vscode.commands.registerCommand('keyboardCursor.undo', () => {
       const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
       const activeEditorData = mainData[activeDocUri]
 
@@ -552,7 +552,7 @@ const activate = (context: vscode.ExtensionContext) => {
       }
    })
 
-   const redo = vscode.commands.registerCommand('kcs.redo', () => {
+   const redo = vscode.commands.registerCommand('keyboardCursor.redo', () => {
       const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
       const activeEditorData = mainData[activeDocUri]
 
