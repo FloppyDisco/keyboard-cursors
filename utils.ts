@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 
-const outputChannel = vscode.window.createOutputChannel('KCS')
+const outputChannel = vscode.window.createOutputChannel('keyboardCursor')
 
 /**
  * @callback SetMyDecorations
@@ -20,8 +20,8 @@ const outputChannel = vscode.window.createOutputChannel('KCS')
  */
 const createDecorations = () => {
    const fontSize: number = vscode.workspace.getConfiguration('editor').get('fontSize')
-   const cursorColor = vscode.workspace.getConfiguration('kcs').get('cursorColor')
-   const selectionColor = vscode.workspace.getConfiguration('kcs').get('selectionColor')
+   const cursorColor = vscode.workspace.getConfiguration('keyboardCursor').get('cursorColor')
+   const selectionColor = vscode.workspace.getConfiguration('keyboardCursor').get('selectionColor')
 
    const eolSelectionBorder = 0.3 * fontSize + 'px'
 

@@ -1,9 +1,9 @@
 {
-   "name": "kcs",
-   "displayName": "Keyboard Cursors and Selections",
-   "description": "Create arbitrary cursors and selections with the keyboard.",
+   "name": "keyboardCursors",
+   "displayName": "Keyboard Cursors",
+   "description": "Add cursors to the document using the keyboard",
    "version": "1.4.4",
-   "publisher": "srares13",
+   "publisher": "bs-code",
    "repository": {
       "type": "git",
       "url": "https://github.com/srares13/keyboard-cursors-and-selections.git"
@@ -27,75 +27,92 @@
    "contributes": {
       "commands": [
          {
-            "command": "kcs.placeInactiveSelection",
-            "title": "KCS: Place Inactive Selection"
+            "command": "keyboardCursor.placeInactiveSelection",
+            "title": "Keyboard Cursor: Add Selection"
          },
          {
-            "command": "kcs.activateSelections",
-            "title": "KCS: Activate Selections"
+            "command": "keyboardCursor.activateSelections",
+            "title": "Keyboard Cursor: Activate Selections"
          },
          {
-            "command": "kcs.removeInactiveSelections",
-            "title": "KCS: Remove Inactive Selections"
+            "command": "keyboardCursor.deactivateSelections",
+            "title": "Keyboard Cursor: Deactivate Selections"
          },
          {
-            "command": "kcs.showImportantChanges",
-            "title": "KCS: Show Important Changes"
+            "command": "keyboardCursor.cycleInactiveSelections",
+            "title": "Keyboard Cursor: Cycle through Inactive Selections"
          },
          {
-            "command": "kcs.undo",
-            "title": "KCS: Undo"
+            "command": "keyboardCursor.reverseCycleInactiveSelections",
+            "title": "Keyboard Cursor: Cycle through Inactive Selections backwards"
          },
          {
-            "command": "kcs.redo",
-            "title": "KCS: Redo"
+            "command": "keyboardCursor.removeInactiveSelections",
+            "title": "Keyboard Cursor: Remove Inactive Selections"
+         },
+         {
+            "command": "keyboardCursor.undo",
+            "title": "Keyboard Cursor: Undo"
+         },
+         {
+            "command": "keyboardCursor.redo",
+            "title": "Keyboard Cursor: Redo"
          }
       ],
       "keybindings": [
          {
-            "command": "kcs.placeInactiveSelection",
-            "key": "pagedown",
+            "command": "keyboardCursor.placeInactiveSelection",
+            "key": "alt+enter",
             "when": "editorTextFocus"
          },
          {
-            "command": "kcs.activateSelections",
-            "key": "pageup",
+            "command": "keyboardCursor.activateSelections",
+            "key": "win+enter",
+            "mac": "ctrl+enter",
+            "when": "editorTextFocus && inactiveSelections"
+         },
+         {
+            "command": "keyboardCursor.deactivateSelections",
+            "key": "win+enter",
+            "mac": "ctrl+enter",
+            "when": "editorTextFocus && !inactiveSelections"
+         },
+         {
+            "command": "keyboardCursor.cycleInactiveSelections",
+            "key": "alt+tab",
+            "mac": "alt+tab",
             "when": "editorTextFocus"
          },
          {
-            "command": "kcs.removeInactiveSelections",
+            "command": "keyboardCursor.reverseCycleInactiveSelections",
+            "key": "shift+alt+tab",
+            "mac": "shift+alt+tab",
+            "when": "editorTextFocus"
+         },
+         {
+            "command": "keyboardCursor.removeInactiveSelections",
             "key": "escape",
             "when": "editorTextFocus && inactiveSelections && !editorHasSelection && !editorHasMultipleSelections && !findWidgetVisible && !suggestWidgetVisible && !renameInputVisible && !referenceSearchVisible && !codeActionMenuVisible && !parameterHintsVisible && !notificationCenterVisible && !notificationToastsVisible"
-         },
-         {
-            "command": "kcs.undo",
-            "key": "alt+shift+z",
-            "when": "editorTextFocus"
-         },
-         {
-            "command": "kcs.redo",
-            "key": "alt+shift+y",
-            "when": "editorTextFocus"
          }
       ],
       "configuration": {
-         "title": "KCS",
+         "title": "keyboardCursor",
          "properties": {
-            "kcs.cursorColor": {
+            "keyboardCursor.cursorColor": {
                "type": "string",
                "description": "Default: #ee77a3",
                "default": "#ee77a3",
                "scope": "window",
                "format": "color-hex"
             },
-            "kcs.selectionColor": {
+            "keyboardCursor.selectionColor": {
                "type": "string",
                "description": "Default: #8c1a8e99\nNote that the default color for selections has transparency.",
                "default": "#8c1a8e99",
                "scope": "window",
                "format": "color-hex"
             },
-            "kcs.inactiveSelectionsReactToDocumentEdits": {
+            "keyboardCursor.inactiveSelectionsReactToDocumentEdits": {
                "type": "boolean",
                "description": "Experimental: When you make edits to the document, the inacitve selections will move across the document in accordance with those edits.",
                "default": true,
@@ -108,11 +125,11 @@
       "lint": "eslint .",
       "pretest": "npm run lint",
       "vscode:prepublish": "node ./esbuild.js",
-      "bundle": "node ./esbuild.js"
+      "bundle": "node ./esbuild.js",
+      "bundle-extension": "npm run bundle"
    },
    "devDependencies": {
       "@types/node": "^20.6.3",
-      "@types/semver": "^7.5.3",
       "@types/vscode": "^1.82.0",
       "esbuild": "~0.18.17",
       "eslint": "~8.48.0",
@@ -123,7 +140,6 @@
    },
    "dependencies": {
       "marked": "^9.0.3",
-      "semver": "~7.5.4",
       "vscode-position-tracking": "~0.1.0"
    }
 }

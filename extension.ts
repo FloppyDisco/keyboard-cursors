@@ -12,7 +12,6 @@ import {
    RangeAndIndex,
    outputChannel
 } from './utils'
-import { handleImportantChanges, showImportantChanges } from './importantChanges'
 import { getUpdatedRanges } from './positionTracking'
 // #endregion
 
@@ -27,14 +26,13 @@ const activate = (context: vscode.ExtensionContext) => {
    vscode.commands.executeCommand('setContext', 'inactiveSelections', false)
    // #endregion
 
-   handleImportantChanges(context)
 
    vscode.workspace.onDidChangeConfiguration(
       (event) => {
          if (
             event.affectsConfiguration('editor.fontSize') ||
-            event.affectsConfiguration('kcs.cursorColor') ||
-            event.affectsConfiguration('kcs.selectionColor')
+            event.affectsConfiguration('keyboardCursor.cursorColor') ||
+            event.affectsConfiguration('keyboardCursor.selectionColor')
          ) {
             const previousUnsetMyDecorations = unsetMyDecorations
             const previousDisposeDecorations = disposeDecorations
@@ -70,7 +68,7 @@ const activate = (context: vscode.ExtensionContext) => {
          }
 
          const inactiveSelectionsReactToDocumentEdits = vscode.workspace
-            .getConfiguration('kcs')
+            .getConfiguration('keyboardCursor')
             .get('inactiveSelectionsReactToDocumentEdits')
 
          const eventDocUri = event.document.uri.toString()
@@ -339,7 +337,7 @@ const activate = (context: vscode.ExtensionContext) => {
    )
 
    const placeInactiveSelection = vscode.commands.registerCommand(
-      'kcs.placeInactiveSelection',
+      'keyboardCursor.placeInactiveSelection',
       () => {
          const activeEditor = vscode.window.activeTextEditor
          const activeDocUri = activeEditor.document.uri.toString()
@@ -347,8 +345,8 @@ const activate = (context: vscode.ExtensionContext) => {
          if (!mainData[activeDocUri]) {
             mainData[activeDocUri] = new MainDataObject()
          }
-         const activeEditorData = mainData[activeDocUri]
 
+         const activeEditorData = mainData[activeDocUri]
          let action
 
          let currentInactiveSelections = [...activeEditorData.inactiveSelections]
@@ -376,6 +374,17 @@ const activate = (context: vscode.ExtensionContext) => {
                   }
                }
             }
+
+            // |-------------------|
+            // |        Bug        |
+            // |-------------------|
+            /*
+             currently adding a new inactive selection that intersects with a previously one
+             causes both of them to be removed
+
+             expected behavior
+             only the old one should be removed, and the new one should be added to the list of inactive selections
+            */
 
             if (commandShouldAddInactiveSelections && addInactiveSelection) {
                const range = new vscode.Range(selection.start, selection.end)
@@ -433,7 +442,7 @@ const activate = (context: vscode.ExtensionContext) => {
       }
    )
 
-   const activateSelections = vscode.commands.registerCommand('kcs.activateSelections', () => {
+   const activateSelections = vscode.commands.registerCommand('keyboardCursor.activateSelections', () => {
       const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
       const activeEditorData = mainData[activeDocUri]
 
@@ -466,8 +475,76 @@ const activate = (context: vscode.ExtensionContext) => {
       activeEditorData.inactiveSelections = []
    })
 
+   const deactivateSelections = vscode.commands.registerCommand('keyboardCursor.deactivateSelections', () => {
+      vscode.commands.executeCommand('keyboardCursor.placeInactiveSelection');
+      vscode.commands.executeCommand('removeSecondaryCursors');
+      vscode.commands.executeCommand('setContext', 'inactiveSelections', true)
+   })
+
+   const cycleInactiveSelections = vscode.commands.registerCommand('keyboardCursor.cycleInactiveSelections',() => {
+      const activeEditor = vscode.window.activeTextEditor
+      const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
+      const activeEditorData = mainData[activeDocUri]
+
+      if (!activeEditorData || !activeEditorData.inactiveSelections.length) {
+         return
+      }
+
+      const inactiveSelections = activeEditorData.inactiveSelections.map(
+         (range) => new vscode.Selection(range.start, range.end)
+      )
+
+      const [currentSelection] = activeEditor.selections
+      let nextSelection = inactiveSelections.pop()
+      let prevSelection;
+
+      while (nextSelection && !currentSelection.isEqual(nextSelection)){
+         prevSelection = nextSelection
+         nextSelection = inactiveSelections.pop()
+      }
+
+      for (const visibleEditor of vscode.window.visibleTextEditors) {
+         if (visibleEditor.document.uri.toString() === activeDocUri) {
+            visibleEditor.selections = [ prevSelection ? prevSelection : inactiveSelections[0] ]
+         }
+      }
+   })
+
+   const reverseCycleInactiveSelections = vscode.commands.registerCommand('keyboardCursor.reverseCycleInactiveSelections',() => {
+      const activeEditor = vscode.window.activeTextEditor
+      const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
+      const activeEditorData = mainData[activeDocUri]
+
+      if (!activeEditorData || !activeEditorData.inactiveSelections.length) {
+         return
+      }
+
+      const inactiveSelections = activeEditorData.inactiveSelections.map(
+         (range) => new vscode.Selection(range.start, range.end)
+      ).reverse()
+
+      const [currentSelection] = activeEditor.selections
+      let nextSelection = inactiveSelections.pop()
+      let prevSelection;
+
+      while (nextSelection && !currentSelection.isEqual(nextSelection)){
+         prevSelection = nextSelection
+         nextSelection = inactiveSelections.pop()
+      }
+
+      for (const visibleEditor of vscode.window.visibleTextEditors) {
+         if (visibleEditor.document.uri.toString() === activeDocUri) {
+            visibleEditor.selections = [ prevSelection ? prevSelection : inactiveSelections[0] ]
+         }
+      }
+   })
+
+
+
+
+
    const removeInactiveSelections = vscode.commands.registerCommand(
-      'kcs.removeInactiveSelections',
+      'keyboardCursor.removeInactiveSelections',
       () => {
          const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
          const activeEditorData = mainData[activeDocUri]
@@ -500,14 +577,7 @@ const activate = (context: vscode.ExtensionContext) => {
       }
    )
 
-   const showImportantChangesDisposable = vscode.commands.registerCommand(
-      'kcs.showImportantChanges',
-      () => {
-         showImportantChanges(context)
-      }
-   )
-
-   const undo = vscode.commands.registerCommand('kcs.undo', () => {
+   const undo = vscode.commands.registerCommand('keyboardCursor.undo', () => {
       const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
       const activeEditorData = mainData[activeDocUri]
 
@@ -561,7 +631,7 @@ const activate = (context: vscode.ExtensionContext) => {
       }
    })
 
-   const redo = vscode.commands.registerCommand('kcs.redo', () => {
+   const redo = vscode.commands.registerCommand('keyboardCursor.redo', () => {
       const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
       const activeEditorData = mainData[activeDocUri]
 
@@ -618,8 +688,10 @@ const activate = (context: vscode.ExtensionContext) => {
    context.subscriptions.push(
       placeInactiveSelection,
       activateSelections,
+      deactivateSelections,
+      cycleInactiveSelections,
+      reverseCycleInactiveSelections,
       removeInactiveSelections,
-      showImportantChangesDisposable,
       undo,
       redo,
       ...disposables
