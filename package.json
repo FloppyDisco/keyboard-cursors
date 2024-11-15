@@ -57,6 +57,14 @@
             "command": "keyboardCursor.activateSelections",
             "key": "win+enter",
             "mac": "ctrl+enter",
+            "when": "editorTextFocus && inactiveSelections"
+         },
+         {
+            "command": "keyboardCursor.deactivateSelections",
+            "key": "win+enter",
+            "mac": "ctrl+enter",
+            "when": "editorTextFocus && !inactiveSelections"
+         },
             "when": "editorTextFocus"
          },
          {
