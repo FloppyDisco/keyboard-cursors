@@ -1,9 +1,9 @@
 {
-   "name": "keyboardCursor",
-   "displayName": "Keyboard Cursors and Selections",
-   "description": "Create arbitrary cursors and selections with the keyboard.",
+   "name": "keyboardCursors",
+   "displayName": "Keyboard Cursors",
+   "description": "Add cursors to the document using the keyboard",
    "version": "1.4.4",
-   "publisher": "srares13",
+   "publisher": "bs-code",
    "repository": {
       "type": "git",
       "url": "https://github.com/srares13/keyboard-cursors-and-selections.git"
@@ -28,15 +28,23 @@
       "commands": [
          {
             "command": "keyboardCursor.placeInactiveSelection",
-            "title": "KCS: Place Inactive Selection"
+            "title": "Keyboard Cursor: Add Selection"
          },
          {
             "command": "keyboardCursor.activateSelections",
-            "title": "KCS: Activate Selections"
+            "title": "Keyboard Cursor: Activate Selections"
          },
          {
             "command": "keyboardCursor.removeInactiveSelections",
-            "title": "KCS: Remove Inactive Selections"
+            "title": "Keyboard Cursor: Remove Inactive Selections"
+         },
+         {
+            "command": "keyboardCursor.undo",
+            "title": "Keyboard Cursor: Undo"
+         },
+         {
+            "command": "keyboardCursor.redo",
+            "title": "Keyboard Cursor: Redo"
          }
       ],
       "keybindings": [
