@@ -39,10 +39,6 @@
             "title": "KCS: Remove Inactive Selections"
          },
          {
-            "command": "kcs.showImportantChanges",
-            "title": "KCS: Show Important Changes"
-         },
-         {
             "command": "kcs.undo",
             "title": "KCS: Undo"
          },
@@ -108,7 +104,8 @@
       "lint": "eslint .",
       "pretest": "npm run lint",
       "vscode:prepublish": "node ./esbuild.js",
-      "bundle": "node ./esbuild.js"
+      "bundle": "node ./esbuild.js",
+      "bundle-extension": "npm run bundle"
    },
    "devDependencies": {
       "@types/node": "^20.6.3",
