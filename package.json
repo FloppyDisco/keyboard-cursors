@@ -35,6 +35,18 @@
             "title": "Keyboard Cursor: Activate Selections"
          },
          {
+            "command": "keyboardCursor.deactivateSelections",
+            "title": "Keyboard Cursor: Deactivate Selections"
+         },
+         {
+            "command": "keyboardCursor.cycleInactiveSelections",
+            "title": "Keyboard Cursor: Cycle through Inactive Selections"
+         },
+         {
+            "command": "keyboardCursor.reverseCycleInactiveSelections",
+            "title": "Keyboard Cursor: Cycle through Inactive Selections backwards"
+         },
+         {
             "command": "keyboardCursor.removeInactiveSelections",
             "title": "Keyboard Cursor: Remove Inactive Selections"
          },
@@ -65,6 +77,16 @@
             "mac": "ctrl+enter",
             "when": "editorTextFocus && !inactiveSelections"
          },
+         {
+            "command": "keyboardCursor.cycleInactiveSelections",
+            "key": "alt+tab",
+            "mac": "alt+tab",
+            "when": "editorTextFocus"
+         },
+         {
+            "command": "keyboardCursor.reverseCycleInactiveSelections",
+            "key": "shift+alt+tab",
+            "mac": "shift+alt+tab",
             "when": "editorTextFocus"
          },
          {

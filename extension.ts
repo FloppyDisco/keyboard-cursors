@@ -345,8 +345,8 @@ const activate = (context: vscode.ExtensionContext) => {
          if (!mainData[activeDocUri]) {
             mainData[activeDocUri] = new MainDataObject()
          }
-         const activeEditorData = mainData[activeDocUri]
 
+         const activeEditorData = mainData[activeDocUri]
          let action
 
          let currentInactiveSelections = [...activeEditorData.inactiveSelections]
@@ -374,6 +374,17 @@ const activate = (context: vscode.ExtensionContext) => {
                   }
                }
             }
+
+            // |-------------------|
+            // |        Bug        |
+            // |-------------------|
+            /*
+             currently adding a new inactive selection that intersects with a previously one
+             causes both of them to be removed
+
+             expected behavior
+             only the old one should be removed, and the new one should be added to the list of inactive selections
+            */
 
             if (commandShouldAddInactiveSelections && addInactiveSelection) {
                const range = new vscode.Range(selection.start, selection.end)
@@ -469,6 +480,67 @@ const activate = (context: vscode.ExtensionContext) => {
       vscode.commands.executeCommand('removeSecondaryCursors');
       vscode.commands.executeCommand('setContext', 'inactiveSelections', true)
    })
+
+   const cycleInactiveSelections = vscode.commands.registerCommand('keyboardCursor.cycleInactiveSelections',() => {
+      const activeEditor = vscode.window.activeTextEditor
+      const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
+      const activeEditorData = mainData[activeDocUri]
+
+      if (!activeEditorData || !activeEditorData.inactiveSelections.length) {
+         return
+      }
+
+      const inactiveSelections = activeEditorData.inactiveSelections.map(
+         (range) => new vscode.Selection(range.start, range.end)
+      )
+
+      const [currentSelection] = activeEditor.selections
+      let nextSelection = inactiveSelections.pop()
+      let prevSelection;
+
+      while (nextSelection && !currentSelection.isEqual(nextSelection)){
+         prevSelection = nextSelection
+         nextSelection = inactiveSelections.pop()
+      }
+
+      for (const visibleEditor of vscode.window.visibleTextEditors) {
+         if (visibleEditor.document.uri.toString() === activeDocUri) {
+            visibleEditor.selections = [ prevSelection ? prevSelection : inactiveSelections[0] ]
+         }
+      }
+   })
+
+   const reverseCycleInactiveSelections = vscode.commands.registerCommand('keyboardCursor.reverseCycleInactiveSelections',() => {
+      const activeEditor = vscode.window.activeTextEditor
+      const activeDocUri = vscode.window.activeTextEditor.document.uri.toString()
+      const activeEditorData = mainData[activeDocUri]
+
+      if (!activeEditorData || !activeEditorData.inactiveSelections.length) {
+         return
+      }
+
+      const inactiveSelections = activeEditorData.inactiveSelections.map(
+         (range) => new vscode.Selection(range.start, range.end)
+      ).reverse()
+
+      const [currentSelection] = activeEditor.selections
+      let nextSelection = inactiveSelections.pop()
+      let prevSelection;
+
+      while (nextSelection && !currentSelection.isEqual(nextSelection)){
+         prevSelection = nextSelection
+         nextSelection = inactiveSelections.pop()
+      }
+
+      for (const visibleEditor of vscode.window.visibleTextEditors) {
+         if (visibleEditor.document.uri.toString() === activeDocUri) {
+            visibleEditor.selections = [ prevSelection ? prevSelection : inactiveSelections[0] ]
+         }
+      }
+   })
+
+
+
 
 
    const removeInactiveSelections = vscode.commands.registerCommand(
@@ -617,6 +689,8 @@ const activate = (context: vscode.ExtensionContext) => {
       placeInactiveSelection,
       activateSelections,
       deactivateSelections,
+      cycleInactiveSelections,
+      reverseCycleInactiveSelections,
       removeInactiveSelections,
       undo,
       redo,
