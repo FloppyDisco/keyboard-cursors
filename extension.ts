@@ -375,6 +375,17 @@ const activate = (context: vscode.ExtensionContext) => {
                }
             }
 
+            // |-------------------|
+            // |        Bug        |
+            // |-------------------|
+            /*
+             currently adding a new inactive selection that intersects with a previously one
+             causes both of them to be removed
+
+             expected behavior
+             only the old one should be removed, and the new one should be added to the list of inactive selections
+            */
+
             if (commandShouldAddInactiveSelections && addInactiveSelection) {
                const range = new vscode.Range(selection.start, selection.end)
                newInactiveSelections.push(range)
